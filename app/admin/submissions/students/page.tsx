@@ -1,0 +1,162 @@
+'use client';
+
+import { StudentSubmission } from '@/models/StudentSubmission';
+import { useEffect, useState } from 'react';
+
+export default function StudentSubmissionsPage() {
+  const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
+  const [selectedSubmission, setSelectedSubmission] = useState<StudentSubmission | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSubmissions();
+  }, []);
+
+  const fetchSubmissions = async () => {
+    try {
+      const response = await fetch('/api/admin/submissions/students');
+      const data = await response.json();
+      setSubmissions(data);
+      if (data.length > 0) {
+        setSelectedSubmission(data[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const markAsRead = async (id: string) => {
+    try {
+      await fetch(`/api/admin/submissions/students/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ read: true }),
+      });
+      fetchSubmissions();
+    } catch (error) {
+      console.error('Error marking as read:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Student Submissions</h1>
+        <p className="text-gray-600 mt-1">
+          {submissions.length} submission{submissions.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* List */}
+        <div className="lg:col-span-1 bg-white rounded-lg shadow overflow-y-auto max-h-[600px]">
+          {submissions.map((submission) => (
+            <button
+              key={submission._id}
+              onClick={() => {
+                setSelectedSubmission(submission);
+                markAsRead(submission._id as string);
+              }}
+              className={`w-full text-left p-4 border-b transition ${
+                selectedSubmission?._id === submission._id
+                  ? 'bg-purple-50 border-l-4 border-l-purple-600'
+                  : 'hover:bg-gray-50'
+              } ${!submission.read && 'font-semibold bg-yellow-50'}`}
+            >
+              <p className="font-semibold text-gray-900">
+                {submission.firstName} {submission.lastName}
+              </p>
+              <p className="text-sm text-gray-600">{submission.email}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {new Date(submission.submittedAt).toLocaleDateString()}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        {/* Detail */}
+        <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
+          {selectedSubmission ? (
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {selectedSubmission.firstName} {selectedSubmission.lastName}
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-gray-600">Email</p>
+                  <p className="font-semibold text-gray-900">{selectedSubmission.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Phone</p>
+                  <p className="font-semibold text-gray-900">{selectedSubmission.phone}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Current Country</p>
+                  <p className="font-semibold text-gray-900">{selectedSubmission.country}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Submitted</p>
+                  <p className="font-semibold text-gray-900">
+                    {new Date(selectedSubmission.submittedAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t">
+                <p className="text-sm text-gray-600 mb-2">Destination Countries</p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedSubmission.destinationCountries?.map((country) => (
+                    <span
+                      key={country}
+                      className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm"
+                    >
+                      {country}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t">
+                <p className="text-sm text-gray-600 mb-2">Subjects of Interest</p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedSubmission.subjects?.map((subject) => (
+                    <span
+                      key={subject}
+                      className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm"
+                    >
+                      {subject}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {selectedSubmission.additionalInfo && (
+                <div className="pt-4 border-t">
+                  <p className="text-sm text-gray-600 mb-2">Additional Information</p>
+                  <p className="text-gray-900">{selectedSubmission.additionalInfo}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No submission selected</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
