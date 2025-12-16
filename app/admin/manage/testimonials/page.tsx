@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import RichTextEditor from '@/components/ui/rich-text-editor'
 import { Trash2, Edit2, Star } from 'lucide-react'
 
 interface Testimonial {
@@ -119,14 +120,15 @@ export default function ManageTestimonials() {
               className="w-full px-4 py-2 border rounded-lg"
               required
             />
-            <textarea
-              placeholder="Testimonial Comment"
-              value={formData.comment}
-              onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg"
-              rows={4}
-              required
-            />
+            <div>
+              <label className="block text-sm font-medium mb-2">Testimonial Comment *</label>
+              <RichTextEditor
+                value={formData.comment}
+                onChange={(value) => setFormData({ ...formData, comment: value })}
+                placeholder="Testimonial comment (supports Markdown formatting)..."
+                minHeight={200}
+              />
+            </div>
             <select
               value={formData.rating}
               onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })}

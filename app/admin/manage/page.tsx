@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
-import { Users, Globe, Star, Building, FileText, Info } from 'lucide-react'
+import { Users, Globe, Star, Building, FileText, Info, BookOpen } from 'lucide-react'
 
 export default function ManageContent() {
   const items = [
@@ -26,6 +26,13 @@ export default function ManageContent() {
       icon: Building,
       href: '/admin/manage/universities',
       color: 'bg-purple-50 border-purple-200'
+    },
+    {
+      title: 'Blogs',
+      description: 'Create and manage SEO-optimized blog posts',
+      icon: BookOpen,
+      href: '/admin/manage/blogs',
+      color: 'bg-cyan-50 border-cyan-200'
     },
     {
       title: 'Testimonials',

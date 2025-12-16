@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import RichTextEditor from "@/components/ui/rich-text-editor";
 import { Trash2, Edit2 } from "lucide-react";
 
 interface Country {
@@ -138,15 +139,17 @@ export default function ManageCountries() {
               className="w-full px-4 py-2 border rounded-lg"
               required
             />
-            <textarea
-              placeholder="Description"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="w-full px-4 py-2 border rounded-lg"
-              rows={3}
-            />
+            <div>
+              <label className="block text-sm font-medium mb-2">Description</label>
+              <RichTextEditor
+                value={formData.description}
+                onChange={(value) =>
+                  setFormData({ ...formData, description: value })
+                }
+                placeholder="Country description (supports Markdown formatting)..."
+                minHeight={200}
+              />
+            </div>
             <input
               type="text"
               placeholder="Image URL"
