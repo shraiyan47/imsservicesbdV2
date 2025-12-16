@@ -24,7 +24,9 @@ export const metadata: Metadata = {
     "student counseling center",
   ],
   generator: "v0.app",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://ims-services.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://ims-services.com"
+  ),
   alternates: {
     canonical: "/",
   },
@@ -119,7 +121,10 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-YE9YX1NZX5"></script>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-YE9YX1NZX5"
+        ></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -130,7 +135,17 @@ export default function RootLayout({
             `,
           }}
         />
-        
+
+        {/* consentmanager */}
+        <script
+          type="text/javascript"
+          data-cmp-ab="1"
+          src="https://cdn.consentmanager.net/delivery/autoblocking/f4aaa949b2faa.js"
+          data-cmp-host="d.delivery.consentmanager.net"
+          data-cmp-cdn="cdn.consentmanager.net"
+          data-cmp-codesrc="16"
+        ></script>
+
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="language" content="English" />
