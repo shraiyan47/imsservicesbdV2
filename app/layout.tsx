@@ -136,15 +136,7 @@ export default function RootLayout({
           }}
         />
 
-        {/* consentmanager */}
-        <script
-          type="text/javascript"
-          data-cmp-ab="1"
-          src="https://cdn.consentmanager.net/delivery/autoblocking/f4aaa949b2faa.js"
-          data-cmp-host="d.delivery.consentmanager.net"
-          data-cmp-cdn="cdn.consentmanager.net"
-          data-cmp-codesrc="16"
-        ></script>
+   
 
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
