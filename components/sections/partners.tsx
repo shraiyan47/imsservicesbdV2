@@ -67,7 +67,7 @@ export default function Partners() {
                 <img 
                   src={partner.logo || "/placeholder.svg"} 
                   alt={partner.name}
-                  className="h-20 w-20 object-contain"
+                  className="h-20 w-full object-contain"
                 />
               </div>
             ))}
