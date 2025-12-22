@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { fetchWithAuth } from '@/lib/api-client';
 
 interface DashboardStats {
   totalStudents: number;
@@ -22,8 +23,8 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
       try {
         const [studentsRes, contactsRes] = await Promise.all([
-          fetch('/api/admin/submissions/students'),
-          fetch('/api/admin/submissions/contact'),
+          fetchWithAuth('/api/admin/submissions/students'),
+          fetchWithAuth('/api/admin/submissions/contact'),
         ]);
 
         const students = await studentsRes.json();

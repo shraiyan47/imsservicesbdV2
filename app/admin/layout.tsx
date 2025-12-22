@@ -14,11 +14,12 @@ export default function AdminLayout({
     { label: 'Dashboard', href: '/admin', icon: '📊' },
     { label: 'Student Submissions', href: '/admin/submissions/students', icon: '👨‍🎓' },
     { label: 'Contact Submissions', href: '/admin/submissions/contact', icon: '📧' },
-    { label: 'Manage Services', href: '/admin/manage/services', icon: '🔧' },
-    { label: 'Manage Countries', href: '/admin/manage/countries', icon: '🌍' },
-    { label: 'Manage Universities', href: '/admin/manage/universities', icon: '🏫' },
-    { label: 'Manage Testimonials', href: '/admin/manage/testimonials', icon: '⭐' },
-    { label: 'Manage Partners', href: '/admin/manage/partners', icon: '🤝' },
+    { label: 'Services', href: '/admin/manage/services', icon: '🔧' },
+    { label: 'Countries', href: '/admin/manage/countries', icon: '🌍' },
+    { label: 'Universities', href: '/admin/manage/universities', icon: '🏫' },
+    { label: 'Testimonials', href: '/admin/manage/testimonials', icon: '⭐' },
+    { label: 'Partners', href: '/admin/manage/partners', icon: '🤝' },
+    { label: 'Blogs', href: '/admin/manage/blogs', icon: '📝' },
     { label: 'Company Info', href: '/admin/manage/company-info', icon: '🏢' },
   ];
 

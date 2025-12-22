@@ -1,13 +1,17 @@
+import Image from 'next/image'
+
 export default function Banner() {
   return (
     <section className="relative h-96 md:h-[500px] bg-gradient-to-r from-navy-dark to-purple-accent overflow-hidden" id="banner">
-      <div 
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `url(/CoverWA.png?height=500&width=1200&query=students+studying+abroad)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+      {/* Background Image with Optimization */}
+      <Image
+        src="/CoverWA.png"
+        alt="Students studying abroad"
+        fill
+        className="absolute inset-0 opacity-20 object-cover"
+        priority
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
+        quality={75}
       />
       
       <div className="relative h-full flex items-center justify-center">

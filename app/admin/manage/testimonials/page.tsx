@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import RichTextEditor from '@/components/ui/rich-text-editor'
 import { Trash2, Edit2, Star } from 'lucide-react'
+import { fetchWithAuth } from '@/lib/api-client'
 
 interface Testimonial {
   _id: string
@@ -33,7 +34,7 @@ export default function ManageTestimonials() {
 
   const fetchTestimonials = async () => {
     try {
-      const res = await fetch('/api/admin/testimonials')
+      const res = await fetchWithAuth('/api/admin/testimonials')
       const data = await res.json()
       setTestimonials(data)
     } catch (error) {
@@ -47,13 +48,13 @@ export default function ManageTestimonials() {
     e.preventDefault()
     try {
       if (editingId) {
-        await fetch(`/api/admin/testimonials/${editingId}`, {
+        await fetchWithAuth(`/api/admin/testimonials/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         })
       } else {
-        await fetch('/api/admin/testimonials', {
+        await fetchWithAuth('/api/admin/testimonials', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
@@ -74,7 +75,7 @@ export default function ManageTestimonials() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetch(`/api/admin/testimonials/${id}`, { method: 'DELETE' })
+      await fetchWithAuth(`/api/admin/testimonials/${id}`, { method: 'DELETE' })
       fetchTestimonials()
     } catch (error) {
       console.error('Error deleting testimonial:', error)

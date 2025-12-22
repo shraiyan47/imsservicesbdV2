@@ -17,7 +17,7 @@ export default function Footer() {
   useEffect(() => {
     const fetchCompanyInfo = async () => {
       try {
-        const res = await fetch('/api/admin/company-info')
+        const res = await fetch('/api/company-info')
         const data = await res.json()
         setCompanyInfo(data)
       } catch (error) {

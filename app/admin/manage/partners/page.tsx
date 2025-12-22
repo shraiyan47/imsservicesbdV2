@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Trash2, Edit2 } from 'lucide-react'
+import { fetchWithAuth } from '@/lib/api-client'
 
 interface Partner {
   _id: string
@@ -26,7 +27,7 @@ export default function ManagePartners() {
 
   const fetchPartners = async () => {
     try {
-      const res = await fetch('/api/admin/partners')
+      const res = await fetchWithAuth('/api/admin/partners')
       const data = await res.json()
       setPartners(data)
     } catch (error) {
@@ -40,13 +41,13 @@ export default function ManagePartners() {
     e.preventDefault()
     try {
       if (editingId) {
-        await fetch(`/api/admin/partners/${editingId}`, {
+        await fetchWithAuth(`/api/admin/partners/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         })
       } else {
-        await fetch('/api/admin/partners', {
+        await fetchWithAuth('/api/admin/partners', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
@@ -67,8 +68,10 @@ export default function ManagePartners() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetch(`/api/admin/partners/${id}`, { method: 'DELETE' })
-      fetchPartners()
+      if (confirm('Are you sure you want to delete this partner?')) {
+        await fetchWithAuth(`/api/admin/partners/${id}`, { method: 'DELETE' })
+        fetchPartners()
+      }
     } catch (error) {
       console.error('Error deleting partner:', error)
     }

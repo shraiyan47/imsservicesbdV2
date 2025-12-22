@@ -2,6 +2,7 @@
 
 import { StudentSubmission } from '@/models/StudentSubmission';
 import { useEffect, useState } from 'react';
+import { fetchWithAuth } from '@/lib/api-client';
 
 export default function StudentSubmissionsPage() {
   const [submissions, setSubmissions] = useState<StudentSubmission[]>([]);
@@ -14,7 +15,7 @@ export default function StudentSubmissionsPage() {
 
   const fetchSubmissions = async () => {
     try {
-      const response = await fetch('/api/admin/submissions/students');
+      const response = await fetchWithAuth('/api/admin/submissions/students');
       const data = await response.json();
       setSubmissions(data);
       if (data.length > 0) {
@@ -29,7 +30,7 @@ export default function StudentSubmissionsPage() {
 
   const markAsRead = async (id: string) => {
     try {
-      await fetch(`/api/admin/submissions/students/${id}`, {
+      await fetchWithAuth(`/api/admin/submissions/students/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ read: true }),

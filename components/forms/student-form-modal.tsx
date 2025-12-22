@@ -84,9 +84,9 @@ export default function StudentFormModal({
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#edededdb]">
         <DialogHeader>
-          <DialogTitle className="text-navy-dark">
+          <DialogTitle className="text-navy-dark font-bold text-2xl">
             Student Enrollment Form
           </DialogTitle>
           <DialogDescription>

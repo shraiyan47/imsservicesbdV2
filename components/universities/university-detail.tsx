@@ -3,12 +3,14 @@
 import { University } from '@/models/University';
 import Image from 'next/image';
 import Link from 'next/link';
+import { renderMarkdownToJSX } from '@/lib/markdown-renderer';
 
 interface UniversityDetailProps {
   university: University;
+  onApplyClick?: () => void;
 }
 
-export default function UniversityDetail({ university }: UniversityDetailProps) {
+export default function UniversityDetail({ university, onApplyClick }: UniversityDetailProps) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {/* Header Image */}
@@ -56,8 +58,10 @@ export default function UniversityDetail({ university }: UniversityDetailProps) 
 
         {/* Description */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">About</h2>
-          <p className="text-gray-700 leading-relaxed">{university.description}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">About</h2>
+          <div className="text-gray-700 space-y-2">
+            {renderMarkdownToJSX(university.description)}
+          </div>
         </div>
 
         {/* Requirements */}
@@ -139,12 +143,12 @@ export default function UniversityDetail({ university }: UniversityDetailProps) 
 
         {/* CTA Buttons */}
         <div className="flex gap-4 pt-6 border-t">
-          <Link
-            href="/"
+          <button
+            onClick={onApplyClick}
             className="flex-1 bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition text-center"
           >
-            Start Application
-          </Link>
+            Apply Now
+          </button>
           {university.website && (
             <a
               href={university.website}

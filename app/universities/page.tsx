@@ -3,6 +3,10 @@
 import UniversityDetail from '@/components/universities/university-detail';
 import UniversityFilters, { FilterState } from '@/components/universities/university-filters';
 import UniversityList from '@/components/universities/university-list';
+import StudentEnrollmentForm from '@/components/forms/student-enrollment-form';
+import Navbar from '@/components/sections/navbar';
+import TopBar from '@/components/sections/top-bar';
+import Footer from '@/components/sections/footer';
 import { University } from '@/models/University';
 import { useEffect, useState } from 'react';
 
@@ -12,6 +16,7 @@ export default function UniversitiesPage() {
   const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<FilterState>({});
+  const [showEnrollmentForm, setShowEnrollmentForm] = useState(false);
 
   // Fetch all universities
   useEffect(() => {
@@ -97,9 +102,13 @@ export default function UniversitiesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
+    <div className="min-h-screen bg-gray-50">
+      {/* Top Bar and Navbar */}
+      <TopBar />
+      <Navbar />
+
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12 mt-24">
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-4xl font-bold mb-2">Find Your University</h1>
           <p className="text-purple-100 text-lg">
@@ -124,7 +133,7 @@ export default function UniversitiesPage() {
           {/* Main Content - University Detail */}
           <div className="lg:col-span-2">
             {selectedUniversity ? (
-              <UniversityDetail university={selectedUniversity} />
+              <UniversityDetail university={selectedUniversity} onApplyClick={() => setShowEnrollmentForm(true)} />
             ) : (
               <div className="bg-white rounded-lg p-12 text-center">
                 <p className="text-gray-600 text-lg">
@@ -135,6 +144,18 @@ export default function UniversitiesPage() {
           </div>
         </div>
       </div>
+
+      {/* Enrollment Form Modal */}
+      {showEnrollmentForm && (
+        <StudentEnrollmentForm
+          onClose={() => setShowEnrollmentForm(false)}
+          countries={universities.map((u) => u.country).filter((c, i, arr) => arr.indexOf(c) === i)}
+          subjects={allSubjects}
+        />
+      )}
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Star } from 'lucide-react'
+import { renderMarkdownToJSX } from '@/lib/markdown-renderer'
 
 interface Testimonial {
   _id: string
@@ -20,7 +21,7 @@ export default function Testimonials() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const res = await fetch('/api/admin/testimonials')
+        const res = await fetch('/api/testimonials')
         const data = await res.json()
         setTestimonials(data)
       } catch (error) {
@@ -62,7 +63,11 @@ export default function Testimonials() {
                     <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-muted-foreground mb-6 italic">{`"${testimonial.comment}"`}</p>
+                <div className="text-muted-foreground mb-6 italic">
+                  {`"`}
+                  {renderMarkdownToJSX(testimonial.comment)}
+                  {`"`}
+                </div>
                 <div className="border-t pt-4">
                   <p className="font-semibold text-navy-dark">{testimonial.name}</p>
                   <p className="text-sm text-muted-foreground">{testimonial.country}</p>

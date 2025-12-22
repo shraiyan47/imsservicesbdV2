@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { fetchWithAuth } from '@/lib/api-client'
 
 interface CompanyInfo {
   phone: string
@@ -28,7 +29,7 @@ export default function ManageCompanyInfo() {
 
   const fetchCompanyInfo = async () => {
     try {
-      const res = await fetch('/api/admin/company-info')
+      const res = await fetchWithAuth('/api/admin/company-info')
       const data = await res.json()
       if (data) {
         setFormData(data)
@@ -43,7 +44,7 @@ export default function ManageCompanyInfo() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await fetch('/api/admin/company-info', {
+      await fetchWithAuth('/api/admin/company-info', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

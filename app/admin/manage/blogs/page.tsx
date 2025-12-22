@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import RichTextEditor from '@/components/ui/rich-text-editor'
+import { fetchWithAuth } from '@/lib/api-client'
 import {
   Dialog,
   DialogContent,
@@ -59,7 +60,7 @@ export default function BlogsManage() {
   const fetchBlogs = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/admin/blogs')
+      const res = await fetchWithAuth('/api/admin/blogs')
       const data = await res.json()
       setBlogs(data)
     } catch (error) {
@@ -112,7 +113,7 @@ export default function BlogsManage() {
       }
 
       if (editingId) {
-        const res = await fetch('/api/admin/blogs', {
+        const res = await fetchWithAuth('/api/admin/blogs', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ _id: editingId, ...payload }),
@@ -123,7 +124,7 @@ export default function BlogsManage() {
         }
         toast.success('Blog updated successfully')
       } else {
-        const res = await fetch('/api/admin/blogs', {
+        const res = await fetchWithAuth('/api/admin/blogs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -168,7 +169,7 @@ export default function BlogsManage() {
     if (!deleteId) return
 
     try {
-      const res = await fetch('/api/admin/blogs', {
+      const res = await fetchWithAuth('/api/admin/blogs', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _id: deleteId }),

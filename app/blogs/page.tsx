@@ -21,7 +21,7 @@ export default function BlogsPage() {
   const fetchBlogs = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/admin/blogs')
+      const res = await fetch('/api/blogs')
       const data = await res.json()
       setBlogs(data)
       setFilteredBlogs(data)

@@ -23,11 +23,12 @@ export default function Services() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await fetch("/api/admin/services");
+        const res = await fetch("/api/services");
         const data = await res.json();
-        setServices(data);
+        setServices(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching services:", error);
+        setServices([]);
       } finally {
         setLoading(false);
       }

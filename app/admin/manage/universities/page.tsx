@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import RichTextEditor from '@/components/ui/rich-text-editor'
+import { fetchWithAuth } from '@/lib/api-client'
 import {
   Dialog,
   DialogContent,
@@ -67,7 +68,7 @@ export default function UniversitiesManage() {
   const fetchUniversities = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/admin/universities')
+      const res = await fetchWithAuth('/api/admin/universities')
       const data = await res.json()
       setUniversities(data)
     } catch (error) {
@@ -124,7 +125,7 @@ export default function UniversitiesManage() {
       }
 
       if (editingId) {
-        const res = await fetch('/api/admin/universities', {
+        const res = await fetchWithAuth('/api/admin/universities', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ _id: editingId, ...payload }),
@@ -132,7 +133,7 @@ export default function UniversitiesManage() {
         if (!res.ok) throw new Error('Failed to update')
         toast.success('University updated successfully')
       } else {
-        const res = await fetch('/api/admin/universities', {
+        const res = await fetchWithAuth('/api/admin/universities', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -175,7 +176,7 @@ export default function UniversitiesManage() {
     if (!deleteId) return
 
     try {
-      const res = await fetch('/api/admin/universities', {
+      const res = await fetchWithAuth('/api/admin/universities', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _id: deleteId }),

@@ -20,7 +20,7 @@ export default function Destinations() {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const res = await fetch("/api/admin/countries");
+        const res = await fetch("/api/countries");
         const data = await res.json();
         setCountries(data);
         if (data.length > 0) {

@@ -24,7 +24,7 @@ export default function TopBar() {
   useEffect(() => {
     const fetchCompanyInfo = async () => {
       try {
-        const res = await fetch("/api/admin/company-info");
+        const res = await fetch("/api/company-info");
         const data = await res.json();
         setCompanyInfo(data);
       } catch (error) {
@@ -38,52 +38,82 @@ export default function TopBar() {
   return (
     <div className="bg-navy-dark text-white h-10 flex items-center px-6">
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Button
-            onClick={() => setShowStudentForm(true)}
-            className="bg-purple-accent text-white hover:bg-purple-accent/90 text-xs h-7"
+      <div className="flex items-center gap-8">
+        <Button
+        onClick={() => setShowStudentForm(true)}
+        className="bg-purple-accent text-white hover:bg-purple-accent/90 text-xs h-7"
+        >
+        Start Now
+        </Button>
+      </div>
+
+      <div className="hidden md:flex items-center gap-6">
+        {companyInfo && (
+        <>
+          <a
+          href={`tel:${companyInfo.phone}`}
+          className="flex items-center gap-2 text-xs hover:text-purple-accent transition-colors"
           >
-            Start Now
-          </Button>
-        </div>
+          <Phone size={14} />
+          <span>{companyInfo.phone}</span>
+          </a>
 
-        <div className="flex items-center gap-6">
-          {companyInfo && (
-            <>
-              <a
-                href={`tel:${companyInfo.phone}`}
-                className="flex items-center gap-2 text-xs hover:text-purple-accent transition-colors"
-              >
-                <Phone size={14} />
-                <span>{companyInfo.phone}</span>
-              </a>
+          <a
+          href={`mailto:${companyInfo.email}`}
+          className="flex items-center gap-2 text-xs hover:text-purple-accent transition-colors"
+          >
+          <Mail size={14} />
+          <span>{companyInfo.email}</span>
+          </a>
 
-              <a
-                href={`mailto:${companyInfo.email}`}
-                className="flex items-center gap-2 text-xs hover:text-purple-accent transition-colors"
-              >
-                <Mail size={14} />
-                <span>{companyInfo.email}</span>
-              </a>
+          <a
+          href={companyInfo.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs hover:text-purple-accent transition-colors"
+          >
+          WhatsApp
+          </a>
+        </>
+        )}
+      </div>
 
-              <a
-                href={companyInfo.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs hover:text-purple-accent transition-colors"
-              >
-                WhatsApp
-              </a>
-            </>
-          )}
-          <StudentFormModal
-            open={showStudentForm}
-            onOpenChange={setShowStudentForm}
-            onClose={() => setShowStudentForm(false)}
-            countries={countries}
-            subjects={subjects}
-          />
-        </div>
+      <div className="flex md:hidden items-center gap-4">
+        {companyInfo && (
+        <>
+          <a
+          href={`tel:${companyInfo.phone}`}
+          className="text-xs hover:text-purple-accent transition-colors"
+          >
+          <Phone size={14} />
+          </a>
+
+          <a
+          href={`mailto:${companyInfo.email}`}
+          className="text-xs hover:text-purple-accent transition-colors"
+          >
+          <Mail size={14} />
+          </a>
+
+          <a
+          href={companyInfo.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs hover:text-purple-accent transition-colors"
+          >
+          WhatsApp
+          </a>
+        </>
+        )}
+      </div>
+
+      <StudentFormModal
+        open={showStudentForm}
+        onOpenChange={setShowStudentForm}
+        onClose={() => setShowStudentForm(false)}
+        countries={countries}
+        subjects={subjects}
+      />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import RichTextEditor from "@/components/ui/rich-text-editor";
 import { Trash2, Edit2, Plus } from "lucide-react";
+import { fetchWithAuth } from "@/lib/api-client";
 
 interface Service {
   _id: string;
@@ -29,7 +30,7 @@ export default function ManageServices() {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch("/api/admin/services");
+      const res = await fetchWithAuth("/api/admin/services");
       const data = await res.json();
       setServices(data);
     } catch (error) {
@@ -43,13 +44,13 @@ export default function ManageServices() {
     e.preventDefault();
     try {
       if (editingId) {
-        await fetch(`/api/admin/services/${editingId}`, {
+        await fetchWithAuth(`/api/admin/services/${editingId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
       } else {
-        await fetch("/api/admin/services", {
+        await fetchWithAuth("/api/admin/services", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
@@ -70,7 +71,7 @@ export default function ManageServices() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetch(`/api/admin/services/${id}`, { method: "DELETE" });
+      await fetchWithAuth(`/api/admin/services/${id}`, { method: "DELETE" });
       fetchServices();
     } catch (error) {
       console.error("Error deleting service:", error);

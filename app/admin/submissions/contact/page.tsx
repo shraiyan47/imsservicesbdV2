@@ -2,6 +2,7 @@
 
 import { ContactSubmission } from '@/models/ContactSubmission';
 import { useEffect, useState } from 'react';
+import { fetchWithAuth } from '@/lib/api-client';
 
 export default function ContactSubmissionsPage() {
   const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
@@ -14,7 +15,7 @@ export default function ContactSubmissionsPage() {
 
   const fetchSubmissions = async () => {
     try {
-      const response = await fetch('/api/admin/submissions/contact');
+      const response = await fetchWithAuth('/api/admin/submissions/contact');
       const data = await response.json();
       setSubmissions(data);
       if (data.length > 0) {
@@ -29,7 +30,7 @@ export default function ContactSubmissionsPage() {
 
   const markAsRead = async (id: string) => {
     try {
-      await fetch(`/api/admin/submissions/contact/${id}`, {
+      await fetchWithAuth(`/api/admin/submissions/contact/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ read: true }),

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import RichTextEditor from "@/components/ui/rich-text-editor";
 import { Trash2, Edit2 } from "lucide-react";
+import { fetchWithAuth } from "@/lib/api-client";
 
 interface Country {
   _id: string;
@@ -35,7 +36,7 @@ export default function ManageCountries() {
 
   const fetchCountries = async () => {
     try {
-      const res = await fetch("/api/admin/countries");
+      const res = await fetchWithAuth("/api/admin/countries");
       const data = await res.json();
       setCountries(data);
     } catch (error) {
@@ -49,13 +50,13 @@ export default function ManageCountries() {
     e.preventDefault();
     try {
       if (editingId) {
-        await fetch(`/api/admin/countries/${editingId}`, {
+        await fetchWithAuth(`/api/admin/countries/${editingId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
       } else {
-        await fetch("/api/admin/countries", {
+        await fetchWithAuth("/api/admin/countries", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
@@ -83,7 +84,7 @@ export default function ManageCountries() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetch(`/api/admin/countries/${id}`, { method: "DELETE" });
+      await fetchWithAuth(`/api/admin/countries/${id}`, { method: "DELETE" });
       fetchCountries();
     } catch (error) {
       console.error("Error deleting country:", error);

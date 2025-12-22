@@ -120,23 +120,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google tag (gtag.js) */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-YE9YX1NZX5"
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-YE9YX1NZX5');
-            `,
-          }}
-        />
-
-   
+        {/* Google tag (gtag.js) - Only load on public pages, not on admin */}
+        <GoogleAnalytics />
 
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -159,5 +144,29 @@ export default function RootLayout({
         <Analytics />
       </body>
     </html>
+  );
+}
+
+function GoogleAnalytics() {
+  // Only load Google Analytics on client side and not on admin pages
+  return (
+    <>
+      <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-YE9YX1NZX5"
+      ></script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            if (!window.location.pathname.startsWith('/admin')) {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-YE9YX1NZX5');
+            }
+          `,
+        }}
+      />
+    </>
   );
 }

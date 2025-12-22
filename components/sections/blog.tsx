@@ -16,7 +16,7 @@ export default function Blog() {
     const fetchBlogs = async () => {
       try {
         setLoading(true)
-        const res = await fetch('/api/admin/blogs')
+        const res = await fetch('/api/blogs')
         const data = await res.json()
         // Filter published blogs and sort by order, then by date
         const publishedBlogs = data.filter((blog: Blog) => blog.published).sort((a: Blog, b: Blog) => {
