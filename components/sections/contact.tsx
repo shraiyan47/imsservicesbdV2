@@ -136,8 +136,9 @@ export default function Contact() {
           {/* Contact Form */}
           <Card>
             <CardHeader>
-              <CardTitle>Send us a Message</CardTitle>
+              <CardTitle className="text-center font-bold text-lg">Send us a Message</CardTitle>
             </CardHeader>
+            
             <CardContent>
               <form
                 onSubmit={handleSubmit}
@@ -167,7 +168,7 @@ export default function Contact() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <input
                     type="email"
                     placeholder="Your Email *"
@@ -178,7 +179,7 @@ export default function Contact() {
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                   />
-                </div>
+                </div> */}
 
                 <div>
                   <input
@@ -190,10 +191,11 @@ export default function Contact() {
                       setFormData({ ...formData, phone: e.target.value })
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    minLength={11}
                   />
                 </div>
 
-                <div>
+                {/* <div>
                   <input
                     type="text"
                     placeholder="Subject *"
@@ -204,13 +206,13 @@ export default function Contact() {
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                   />
-                </div>
+                </div> */}
 
                 <div>
                   <textarea
                     placeholder="Your Message *"
                     required
-                    rows={9}
+                    rows={12}
                     value={formData.message}
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })

@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Blog } from '@/models/Blog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState<Blog[]>([])
@@ -13,6 +16,7 @@ export default function BlogsPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     fetchBlogs()
@@ -23,8 +27,12 @@ export default function BlogsPage() {
       setLoading(true)
       const res = await fetch('/api/blogs')
       const data = await res.json()
-      setBlogs(data)
-      setFilteredBlogs(data)
+      // Sort by recent first (newest first)
+      const sortedBlogs = data.sort((a: Blog, b: Blog) => {
+        return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+      })
+      setBlogs(sortedBlogs)
+      setFilteredBlogs(sortedBlogs)
     } catch (error) {
       console.error('Error fetching blogs:', error)
     } finally {
@@ -55,8 +63,15 @@ export default function BlogsPage() {
   // Get all unique tags
   const allTags = Array.from(new Set(blogs.flatMap((blog) => blog.tags)))
 
-  // Featured blog
-  const featuredBlog = blogs.find((blog) => blog.featured)
+  // Format date
+  const formatDate = (date?: Date) => {
+    if (!date) return 'Recent'
+    return new Date(date).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    })
+  }
 
   if (loading) {
     return (
@@ -70,56 +85,35 @@ export default function BlogsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-6 pt-8">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-purple-accent hover:text-purple-accent/80 font-medium mb-8"
+        >
+          <ArrowLeft size={20} />
+          Back
+        </button>
+      </div>
+
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12 mt-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-2">IMS Services Blog</h1>
+      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+        <div className="max-w-7xl mx-auto px-6">
+          <h1 className="text-4xl font-bold mb-2">All Blogs</h1>
           <p className="text-purple-100 text-lg">
             Expert insights on international education, universities, and student guidance
           </p>
+          <p className="text-purple-100 text-sm mt-4">Total: {blogs.length} blogs</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Featured Blog */}
-        {featuredBlog && (
-          <div className="mb-12">
-            <Link href={`/blogs/${featuredBlog.slug}`}>
-              <div className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition cursor-pointer">
-                <div className="grid md:grid-cols-2 gap-6 p-8">
-                  {featuredBlog.featuredImage && (
-                    <div className="relative h-64 md:h-auto">
-                      <Image
-                        src={featuredBlog.featuredImage}
-                        alt={featuredBlog.title}
-                        fill
-                        className="object-cover rounded-lg"
-                      />
-                    </div>
-                  )}
-                  <div className="flex flex-col justify-between">
-                    <div>
-                      <div className="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium mb-4">
-                        Featured
-                      </div>
-                      <h2 className="text-3xl font-bold text-gray-900 mb-4">{featuredBlog.title}</h2>
-                      <p className="text-gray-600 mb-4">{featuredBlog.excerpt}</p>
-                    </div>
-                    <div>
-                      <Button className="bg-purple-600 hover:bg-purple-700">Read More</Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-        )}
-
+      <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Search and Filter */}
         <div className="mb-8 space-y-4">
           <Input
-            placeholder="Search blogs..."
+            type="text"
+            placeholder="Search blogs by title or content..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full"
@@ -130,9 +124,9 @@ export default function BlogsPage() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedTag(null)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   selectedTag === null
-                    ? 'bg-purple-600 text-white'
+                    ? 'bg-purple-accent text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -141,10 +135,10 @@ export default function BlogsPage() {
               {allTags.map((tag) => (
                 <button
                   key={tag}
-                  onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  onClick={() => setSelectedTag(tag)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     selectedTag === tag
-                      ? 'bg-purple-600 text-white'
+                      ? 'bg-purple-accent text-white'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
@@ -155,44 +149,38 @@ export default function BlogsPage() {
           )}
         </div>
 
-        {/* Blogs Grid */}
-        {filteredBlogs.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No blogs found. Try adjusting your search or filters.</p>
+        {/* Blog Grid */}
+        {filteredBlogs.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {filteredBlogs.map((blog) => (
+              <Card key={blog._id || blog.slug} className="flex flex-col hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="text-navy-dark line-clamp-2">{blog.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {formatDate(blog.createdAt)} {blog.author && `• ${blog.author}`}
+                  </p>
+                </CardHeader>
+                <CardContent className="flex flex-col justify-between flex-grow">
+                  <p className="text-muted-foreground mb-6 line-clamp-3">{blog.excerpt}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {blog.tags && blog.tags.slice(0, 2).map((tag) => (
+                      <span key={tag} className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <Link href={`/blogs/${blog.slug}`}>
+                    <Button className="bg-purple-accent hover:bg-purple-accent/90 w-full" variant="default">
+                      Read More
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredBlogs.map((blog) => (
-              <Link key={blog._id} href={`/blogs/${blog.slug}`}>
-                <div className="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full">
-                  {blog.featuredImage && (
-                    <div className="relative h-48">
-                      <Image
-                        src={blog.featuredImage}
-                        alt={blog.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {blog.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">{blog.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">{blog.excerpt}</p>
-                    <div className="flex justify-between items-center text-xs text-gray-500">
-                      <span>{blog.author}</span>
-                      <span>{new Date(blog.createdAt || '').toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">No blogs found matching your criteria.</p>
           </div>
         )}
       </div>

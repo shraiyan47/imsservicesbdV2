@@ -84,8 +84,16 @@ export default function ManageCountries() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetchWithAuth(`/api/admin/countries/${id}`, { method: "DELETE" });
-      fetchCountries();
+      if (confirm("Are you sure you want to delete this?")) {
+        // User clicked OK
+        await fetchWithAuth(`/api/admin/countries/${id}`, { method: "DELETE" });
+        fetchCountries();
+        console.log("Delete country");
+      } else {
+        // User clicked Cancel
+        console.log("Delete cancelled");
+        alert("Delete cancelled");
+      }
     } catch (error) {
       console.error("Error deleting country:", error);
     }
@@ -141,7 +149,9 @@ export default function ManageCountries() {
               required
             />
             <div>
-              <label className="block text-sm font-medium mb-2">Description</label>
+              <label className="block text-sm font-medium mb-2">
+                Description
+              </label>
               <RichTextEditor
                 value={formData.description}
                 onChange={(value) =>
@@ -169,7 +179,6 @@ export default function ManageCountries() {
                 setFormData({ ...formData, tag: e.target.value })
               }
               className="w-full px-4 py-2 border rounded-lg"
-              
             />
             <div className="flex gap-2">
               <Button type="submit" className="bg-purple-600 text-white">

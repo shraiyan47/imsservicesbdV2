@@ -205,7 +205,12 @@ export default function UniversitiesManage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Manage Universities</h1>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(newOpen) => {
+          // Prevent closing from outside clicks or escape key
+          // Only close programmatically via closeDialog function
+          if (newOpen === false) return
+          setOpen(newOpen)
+        }}>
           <DialogTrigger asChild>
             <Button
               onClick={() => {
@@ -218,7 +223,11 @@ export default function UniversitiesManage() {
               Add University
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent 
+            className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg p-6"
+            onPointerDownOutside={(e) => e.preventDefault()}
+            onEscapeKeyDown={(e) => e.preventDefault()}
+          >
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit University' : 'Add New University'}</DialogTitle>
               <DialogDescription>

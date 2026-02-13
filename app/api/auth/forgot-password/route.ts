@@ -59,6 +59,8 @@ export async function POST(request: NextRequest) {
       'reset'
     )
 
+    console.log("Reset Link : ",resetLink)
+
     const emailTemplate = getEmailTemplate('password-reset', { resetLink })
 
     try {
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
       console.error('Email sending failed:', emailError)
     }
 
-    return createAuthResponse(
+    return createAuthResponse(  
       true,
       'If an account exists with this email, a password reset link will be sent.',
       {},

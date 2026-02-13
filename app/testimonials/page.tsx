@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
-import { Star } from 'lucide-react'
+import { Star, ArrowLeft } from 'lucide-react'
 import { renderMarkdownToJSX } from '@/lib/markdown-renderer'
 import {
   Dialog,
@@ -22,7 +22,7 @@ interface Testimonial {
   rating: number
 }
 
-export default function Testimonials() {
+export default function AllTestimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
@@ -57,32 +57,38 @@ export default function Testimonials() {
     }
   }
 
-  // Show only first 6 testimonials on home page
-  const displayedTestimonials = testimonials.slice(0, 6)
-  const hasMoreComments = testimonials.length > 6
-
   if (loading) {
     return (
-      <section id="testimonials" className="py-16 md:py-24 bg-background">
+      <div className="min-h-screen py-16 md:py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-muted-foreground">Loading testimonials...</p>
         </div>
-      </section>
+      </div>
     )
   }
 
   return (
-    <section id="testimonials" className="py-16 md:py-24 bg-background">
+    <div className="min-h-screen py-16 md:py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
+        {/* Back Button */}
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-purple-accent hover:text-purple-accent/80 font-medium mb-8"
+        >
+          <ArrowLeft size={20} />
+          Back
+        </button>
+
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-navy-dark">Success Stories</h2>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-navy-dark">All Testimonials</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Hear from our students who achieved their dreams
+            Hear from all our students who achieved their dreams
           </p>
+          <p className="text-sm text-muted-foreground mt-2">Total: {testimonials.length} testimonials</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {displayedTestimonials.map((testimonial) => {
+          {testimonials.map((testimonial) => {
             const { text, isTruncated } = truncateComment(testimonial.comment)
             return (
               <Card key={testimonial._id} className="border-t-4 border-t-purple-accent">
@@ -115,19 +121,6 @@ export default function Testimonials() {
             )
           })}
         </div>
-
-        {/* Check more Comments Button */}
-        {hasMoreComments && (
-          <div className="text-center mt-12">
-            <Button
-              onClick={() => router.push('/testimonials')}
-              size="lg"
-              className="bg-purple-accent hover:bg-purple-accent/90"
-            >
-              Check more Comments
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Modal Dialog for Full Comment */}
@@ -157,6 +150,6 @@ export default function Testimonials() {
           )}
         </DialogContent>
       </Dialog>
-    </section>
+    </div>
   )
 }
