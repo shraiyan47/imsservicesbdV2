@@ -158,7 +158,7 @@ function GoogleAnalytics() {
       <script
         dangerouslySetInnerHTML={{
           __html: `
-            if (!window.location.pathname.startsWith('/admin')) {
+            if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/admin')) {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());

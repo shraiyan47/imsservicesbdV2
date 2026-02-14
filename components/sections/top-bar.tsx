@@ -64,9 +64,9 @@ export default function TopBar() {
     fetchCompanyInfo();
   }, []);
 
-  let url = window.location.host.includes("imsservices");
+  // let url = window.location.host.includes("imsservices");
 
-  console.log("URL: ", url);
+  // console.log("URL: ", url);
 
   return (
     <div className="bg-navy-dark text-white h-10 flex items-center px-6">
@@ -79,7 +79,7 @@ export default function TopBar() {
             Start Now
           </Button>
         </div>
-
+{/* 
         <div className="flex items-center gap-2">
           <Link
             className="text-white hover:text-purple-accent transition-colors"
@@ -87,7 +87,7 @@ export default function TopBar() {
           >
             XXX
           </Link>
-        </div>
+        </div> */}
 
         <div className="hidden md:flex items-center gap-6">
           {companyInfo && (
