@@ -65,35 +65,172 @@ export function renderMarkdownToJSX(text: string): React.ReactNode {
   // Split by newlines and process each line
   const lines = text.split('\n');
   
-  return React.createElement(
-    React.Fragment,
-    null,
-    lines.map((line, lineIdx) => {
-      // Check for headers
-      if (line.startsWith('## ')) {
-        return React.createElement(
+  const elements: React.ReactElement[] = [];
+  let listItems: React.ReactElement[] = [];
+  let listIdx = 0;
+
+  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    const line = lines[lineIdx];
+
+    // Check for headers
+    if (line.startsWith('## ')) {
+      // Flush any pending list
+      if (listItems.length > 0) {
+        elements.push(
+          React.createElement('ul', { key: `ul-${listIdx}`, className: 'list-disc list-inside mb-4 space-y-1' }, listItems)
+        );
+        listItems = [];
+        listIdx++;
+      }
+      elements.push(
+        React.createElement(
           'h2',
           { key: `h2-${lineIdx}`, className: 'text-2xl font-bold mt-4 mb-2' },
           processText(line.substring(3))
+        )
+      );
+      continue;
+    }
+
+    if (line.startsWith('# ')) {
+      // Flush any pending list
+      if (listItems.length > 0) {
+        elements.push(
+          React.createElement('ul', { key: `ul-${listIdx}`, className: 'list-disc list-inside mb-4 space-y-1' }, listItems)
         );
+        listItems = [];
+        listIdx++;
       }
-      if (line.startsWith('# ')) {
-        return React.createElement(
+      elements.push(
+        React.createElement(
           'h1',
           { key: `h1-${lineIdx}`, className: 'text-3xl font-bold mt-4 mb-2' },
           processText(line.substring(2))
-        );
-      }
-      if (line.trim() === '') {
-        return React.createElement('div', { key: `space-${lineIdx}`, className: 'mb-2' });
-      }
+        )
+      );
+      continue;
+    }
 
-      // Regular paragraph with formatting
-      return React.createElement(
+    // Check for bullet points
+    if (line.trim().startsWith('- ')) {
+      listItems.push(
+        React.createElement('li', { key: `li-${lineIdx}` }, processText(line.substring(2).trim()))
+      );
+      continue;
+    }
+
+    // Empty line - flush list if any
+    if (line.trim() === '') {
+      if (listItems.length > 0) {
+        elements.push(
+          React.createElement('ul', { key: `ul-${listIdx}`, className: 'list-disc list-inside mb-4 space-y-1' }, listItems)
+        );
+        listItems = [];
+        listIdx++;
+      }
+      elements.push(React.createElement('div', { key: `space-${lineIdx}`, className: 'mb-2' }));
+      continue;
+    }
+
+    // Flush any pending list before paragraph
+    if (listItems.length > 0) {
+      elements.push(
+        React.createElement('ul', { key: `ul-${listIdx}`, className: 'list-disc list-inside mb-4 space-y-1' }, listItems)
+      );
+      listItems = [];
+      listIdx++;
+    }
+
+    // Regular paragraph with formatting
+    elements.push(
+      React.createElement(
         'p',
         { key: `p-${lineIdx}`, className: 'mb-2' },
         processText(line)
-      );
-    })
+      )
+    );
+  }
+
+  // Flush any remaining list items
+  if (listItems.length > 0) {
+    elements.push(
+      React.createElement('ul', { key: `ul-${listIdx}`, className: 'list-disc list-inside mb-4 space-y-1' }, listItems)
+    );
+  }
+
+  return React.createElement(
+    React.Fragment,
+    null,
+    elements
   );
+}
+
+// Server-side markdown to HTML converter
+export function markdownToHTML(text: string): string {
+  let html = '';
+  const lines = text.split('\n');
+  let inList = false;
+  let listHtml = '';
+
+  for (const line of lines) {
+    // Apply inline formatting first
+    let formatted = line
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/__(.*?)__/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/_(.*?)_/g, '<em>$1</em>');
+
+    // Check for headers
+    if (line.startsWith('## ')) {
+      if (inList) {
+        html += '</ul>\n';
+        inList = false;
+      }
+      html += `<h2 class="text-2xl font-bold mt-4 mb-2">${formatted.substring(3)}</h2>\n`;
+      continue;
+    }
+
+    if (line.startsWith('# ')) {
+      if (inList) {
+        html += '</ul>\n';
+        inList = false;
+      }
+      html += `<h1 class="text-3xl font-bold mt-4 mb-2">${formatted.substring(2)}</h1>\n`;
+      continue;
+    }
+
+    // Check for bullet points
+    if (line.trim().startsWith('- ')) {
+      if (!inList) {
+        html += '<ul class="list-disc list-inside mb-4 space-y-1">\n';
+        inList = true;
+      }
+      html += `<li>${formatted.substring(2).trim()}</li>\n`;
+      continue;
+    }
+
+    // Empty line
+    if (line.trim() === '') {
+      if (inList) {
+        html += '</ul>\n';
+        inList = false;
+      }
+      html += '<div class="mb-2"></div>\n';
+      continue;
+    }
+
+    // Regular paragraph
+    if (inList) {
+      html += '</ul>\n';
+      inList = false;
+    }
+    html += `<p class="mb-2">${formatted}</p>\n`;
+  }
+
+  // Close any open list
+  if (inList) {
+    html += '</ul>\n';
+  }
+
+  return html;
 }

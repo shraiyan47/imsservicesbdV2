@@ -1,5 +1,6 @@
 import { getDatabase } from '@/lib/mongodb'
 import { Blog } from '@/models/Blog'
+import { markdownToHTML } from '@/lib/markdown-renderer'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -176,8 +177,8 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
           {/* Blog Content */}
           <article className="bg-white p-8 rounded-lg shadow-sm prose prose-lg max-w-none">
             <div
-              className="text-gray-700 leading-relaxed whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
+              className="text-gray-700 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: markdownToHTML(blog.content) }}
             />
           </article>
 

@@ -85,7 +85,7 @@ export default function Testimonials() {
           {displayedTestimonials.map((testimonial) => {
             const { text, isTruncated } = truncateComment(testimonial.comment)
             return (
-              <Card key={testimonial._id} className="border-t-4 border-t-purple-accent">
+              <Card key={testimonial._id} className="border-t-4 border-t-purple-accent bg-purple-50">
                 <CardContent className="pt-6">
                   <div className="flex gap-1 mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -132,7 +132,7 @@ export default function Testimonials() {
 
       {/* Modal Dialog for Full Comment */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl bg-yellow-50 rounded-lg p-6">
           <DialogHeader>
             <DialogTitle>Full Testimonial</DialogTitle>
           </DialogHeader>
@@ -143,11 +143,11 @@ export default function Testimonials() {
                   <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
                 ))}
               </div>
-              <p className="text-muted-foreground italic leading-relaxed">
+              <div className="text-muted-foreground italic leading-relaxed">
                 {`"`}
                 {renderMarkdownToJSX(selectedTestimonial.comment)}
                 {`"`}
-              </p>
+              </div>
               <div className="border-t pt-4">
                 <p className="font-semibold text-navy-dark">{selectedTestimonial.name}</p>
                 <p className="text-sm text-muted-foreground">{selectedTestimonial.country}</p>

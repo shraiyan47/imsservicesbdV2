@@ -211,7 +211,7 @@ export default function BlogsManage() {
               Add Blog
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white rounded-lg p-6">
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit Blog' : 'Add New Blog'}</DialogTitle>
               <DialogDescription>

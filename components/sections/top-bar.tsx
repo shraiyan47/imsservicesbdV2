@@ -19,6 +19,7 @@ interface CompanyInfo {
 export default function TopBar() {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
   const [showStudentForm, setShowStudentForm] = useState(false);
+  const [isNotMainDomain, setIsNotMainDomain] = useState(false);
   const [countries, setCountries] = useState<string[]>([
     "Bangladesh",
     "USA",
@@ -64,9 +65,20 @@ export default function TopBar() {
     fetchCompanyInfo();
   }, []);
 
-  // let url = window.location.host.includes("imsservices");
+  // Auto-trigger Start Now modal on first visit
+  useEffect(() => {
+    const isTriggered = sessionStorage.getItem("studentFormTriggered");
+    if (!isTriggered) {
+      setShowStudentForm(true);
+      sessionStorage.setItem("studentFormTriggered", "1");
+    }
+  }, []);
 
-  // console.log("URL: ", url);
+  // Check if domain is NOT imsservicesbd.com
+  useEffect(() => {
+    const domain = new URL(location.href).hostname;
+    setIsNotMainDomain(!domain.includes("imsservicesbd.com"));
+  }, []);
 
   return (
     <div className="bg-navy-dark text-white h-10 flex items-center px-6">
@@ -79,15 +91,17 @@ export default function TopBar() {
             Start Now
           </Button>
         </div>
-{/* 
-        <div className="flex items-center gap-2">
-          <Link
-            className="text-white hover:text-purple-accent transition-colors"
-            href="/admin"
-          >
-            XXX
-          </Link>
-        </div> */}
+
+        {isNotMainDomain && (
+          <div className="flex items-center">
+            <Link
+              className="text-white hover:text-purple-accent transition-colors text-xs font-medium"
+              href="/admin/login"
+            >
+              Admin Login
+            </Link>
+          </div>
+        )}
 
         <div className="hidden md:flex items-center gap-6">
           {companyInfo && (

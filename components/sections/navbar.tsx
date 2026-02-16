@@ -12,6 +12,7 @@ export default function Navbar() {
     { label: 'Services', href: '#services' },
     { label: 'Destinations', href: '#destinations' },
     { label: 'Testimonials', href: '#testimonials' },
+    { label: 'Blogs', href: '#blogs' },
     { label: 'Partners', href: '#partners' },
     { label: 'Contact', href: '#contact' },
   ]

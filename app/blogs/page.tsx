@@ -89,7 +89,7 @@ export default function BlogsPage() {
       {/* Back Button */}
       <div className="max-w-7xl mx-auto px-6 pt-8">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/#blogs')}
           className="flex items-center gap-2 text-purple-accent hover:text-purple-accent/80 font-medium mb-8"
         >
           <ArrowLeft size={20} />
