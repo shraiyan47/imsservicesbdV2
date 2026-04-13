@@ -520,7 +520,7 @@ export default function UniversitiesManage() {
                         <AlertDialogTrigger asChild>
                           <Button
                             size="sm"
-                            variant="destructive"
+                            variant="outline"
                             onClick={() => setDeleteId(uni._id || null)}
                             className="gap-1"
                           >

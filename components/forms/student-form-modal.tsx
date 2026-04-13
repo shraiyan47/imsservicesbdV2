@@ -16,7 +16,7 @@ interface StudentFormModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
     onClose: () => void;
-  countries: string[];
+  // countries: string[]; --- IGNORE ---
   subjects: string[];
 }
 
@@ -26,12 +26,17 @@ interface StudentEnrollmentFormProps {
   
 }
 
+interface CountryName {
+  value: string;
+  label: string;
+}
+
 
 export default function StudentFormModal({
   open,
   onOpenChange,
     onClose,
-  countries = [],
+  // countries = [], --- IGNORE ---
   subjects = [],
 }: StudentFormModalProps) {
     const [formData, setFormData] = useState({
@@ -39,8 +44,8 @@ export default function StudentFormModal({
     lastName: '',
     email: '',
     phone: '',
-    country: '',
-    destinationCountries: [] as string[],
+    country: 'Bangladesh',
+    destinationCountries: ['United Kingdom'] as string[],
     subjects: [] as string[],
     qualifications: '',
     ielts: '',
@@ -49,9 +54,18 @@ export default function StudentFormModal({
     additionalInfo: '',
   });
 
+    const [countryOptions, setCountryOptions] = useState<CountryName[]>([
+    { value: "Bangladesh", label: "Bangladesh" },
+    { value: "United Kingdom", label: "United Kingdom" },
+    { value: "United States", label: "United States" },
+    { value: "Australia", label: "Australia" },
+    { value: "New Zealand", label: "New Zealand" },
+  ]);
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  // Handle form submission to backend API endpoint (/api/submissions/student)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -74,6 +88,7 @@ export default function StudentFormModal({
     }
   };
 
+  // Helper to toggle items in multi-select fields (destination Countries and subjects)
   const toggleMultiSelect = (field: 'destinationCountries' | 'subjects', value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -82,6 +97,7 @@ export default function StudentFormModal({
         : [...prev[field], value],
     }));
   };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#edededdb]">
@@ -159,10 +175,11 @@ export default function StudentFormModal({
               }
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
             >
-              <option value="">Select Country</option>
-              {countries.map((country) => (
-                <option key={country} value={country}>
-                  {country}
+              <option value={0}>Select Country</option>
+              
+              {countryOptions.map((country) => (
+                <option key={country.value} value={country.value}>
+                  {country.label}
                 </option>
               ))}
             </select>
@@ -173,17 +190,17 @@ export default function StudentFormModal({
               Destination Countries
             </label>
             <div className="space-y-2 max-h-32 overflow-y-auto border border-gray-300 rounded-lg p-3">
-              {countries.map((country) => (
-                <label key={country} className="flex items-center gap-2 cursor-pointer">
+              {countryOptions.map((country) => (
+                <label key={country.value} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={formData.destinationCountries.includes(country)}
+                    checked={formData.destinationCountries.includes(country.value)}
                     onChange={() =>
-                      toggleMultiSelect('destinationCountries', country)
+                      toggleMultiSelect('destinationCountries', country.value)
                     }
                     className="w-4 h-4"
                   />
-                  <span className="text-sm">{country}</span>
+                  <span className="text-sm">{country.label}</span>
                 </label>
               ))}
             </div>
@@ -228,7 +245,7 @@ export default function StudentFormModal({
             />
             <input
               type="number"
-              placeholder="Budget (USD)"
+              placeholder="Budget"
               value={formData.budget}
               onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"

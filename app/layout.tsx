@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { MetaPixel } from "@/components/meta-pixel";
+import Providers from "./providers";
 import "./globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -23,9 +24,9 @@ export const metadata: Metadata = {
     "education counselor Bangladesh",
     "student counseling center",
   ],
-  generator: "v0.app",
+  // generator: "",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://ims-services.com"
+    process.env.NEXT_PUBLIC_APP_URL || "https://imsservicesbd.com"
   ),
   alternates: {
     canonical: "/",
@@ -127,8 +128,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
-        <meta name="author" content="IMS Services" />
-        <meta name="copyright" content="IMS Services" />
+        <meta name="author" content="Shahadat Hossain Raiyan - SHR47" />
+        <meta name="copyright" content="GreenTechZone47" />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -139,8 +140,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans antialiased`}>
-        <MetaPixel />
-        {children}
+        <Providers>
+          <MetaPixel />
+          {children}
+        </Providers>
         <Analytics />
       </body>
     </html>

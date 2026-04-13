@@ -11,6 +11,7 @@ export default function Navbar() {
   const navItems = [
     { label: 'Services', href: '#services' },
     { label: 'Destinations', href: '#destinations' },
+    { label: 'Costing', href: '#costing' },
     { label: 'Testimonials', href: '#testimonials' },
     { label: 'Blogs', href: '#blogs' },
     { label: 'Partners', href: '#partners' },

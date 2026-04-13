@@ -55,7 +55,13 @@ export default function Services() {
             Your Gateway to World-Class Education
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            IMS Services is a leading international student consultancy agency with headquarters in Dhaka and global offices across United Kingdom (London), United States (New York), and Australia (Melbourne). Our main focus is on the international student market, aiming to create exceptional opportunities for our students. We have successfully placed candidates in top universities across various sectors, such as law, economics, medicine, engineering, and business. 
+            IMS Services is a leading international student consultancy agency
+            with headquarters in Dhaka and global offices across United Kingdom
+            (London), United States (New York), and Australia (Melbourne). Our
+            main focus is on the international student market, aiming to create
+            exceptional opportunities for our students. We have successfully
+            placed candidates in top universities across various sectors, such
+            as law, economics, medicine, engineering, and business.
           </p>
         </div>
 

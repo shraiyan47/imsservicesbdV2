@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import StudentFormModal from "@/components/forms/student-form-modal";
 import Link from "next/link";
+import { usePoundRate } from "@/contexts/PoundRateContext";
 
 interface TopBarProps {
   onStartNowClick: () => void;
@@ -16,40 +17,12 @@ interface CompanyInfo {
   whatsappUrl: string;
 }
 
+
 export default function TopBar() {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
   const [showStudentForm, setShowStudentForm] = useState(false);
   const [isNotMainDomain, setIsNotMainDomain] = useState(false);
-  const [countries, setCountries] = useState<string[]>([
-    "Bangladesh",
-    "USA",
-    "Canada",
-    "Australia",
-    "UK",
-    "Germany",
-    "France",
-    "Netherlands",
-    "Sweden",
-    "New Zealand",
-    "Ireland",
-    "Malta",
-    "Cyprus",
-  ]);
-  const [subjects, setSubjects] = useState<string[]>([
-    "Computer Science",
-    "Business",
-    "Engineering",
-    "Medicine",
-    "Arts",
-    "Law",
-    "Psychology",
-    "Biology",
-    "Economics",
-    "Architecture",
-    "Nursing",
-    "Education",
-    "Environmental Science",
-  ]);
+  const { poundRate, loading } = usePoundRate();
 
   useEffect(() => {
     const fetchCompanyInfo = async () => {
@@ -163,12 +136,14 @@ export default function TopBar() {
           )}
         </div>
 
+        <div className="ml-1 text-xs">
+          {!loading && poundRate > 0 ? `GBP to BDT: ${Number(poundRate).toFixed(2)}` : "Loading exchange rate..."}
+        </div>
+
         <StudentFormModal
           open={showStudentForm}
           onOpenChange={setShowStudentForm}
-          onClose={() => setShowStudentForm(false)}
-          countries={countries}
-          subjects={subjects}
+          onClose={() => setShowStudentForm(false)} subjects={[]}           
         />
       </div>
     </div>
