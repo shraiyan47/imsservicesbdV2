@@ -16,8 +16,19 @@ export function PoundRateProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const fetchPoundRate = async () => {
       try {
+        // Get yesterday and today's dates
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const formatDate = (date: Date) =>
+          date.toISOString().split("T")[0];
+
+        const startDate = formatDate(yesterday);
+        const endDate = formatDate(today);
+
         const res = await fetch(
-          "https://fxds-public-exchange-rates-api.oanda.com/cc-api/currencies?base=GBP&quote=BDT&data_type=general_currency_pair&start_date=2026-04-12&end_date=2026-04-13"
+          `https://fxds-public-exchange-rates-api.oanda.com/cc-api/currencies?base=GBP&quote=BDT&data_type=general_currency_pair&start_date=${startDate}&end_date=${endDate}`
         );
         const data = await res.json();
         setPoundRate(data?.response?.[0]?.average_bid);
