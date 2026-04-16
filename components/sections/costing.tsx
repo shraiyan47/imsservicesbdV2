@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { generateInvoicePDF } from "@/lib/generate-invoice";
 
 export default function Costing() {
   const { poundRate, loading } = usePoundRate();
@@ -47,6 +48,36 @@ export default function Costing() {
       return `£${amount.toLocaleString()}`;
     }
     return `৳${Math.round(amount).toLocaleString('en-BD')}`;
+  };
+
+  const handleGenerateInvoice = async () => {
+    const rateNum = Number(poundRate) || 0;
+    if (rateNum === 0) {
+      alert("Please wait for the exchange rate to load");
+      return;
+    }
+
+    try {
+      await generateInvoicePDF({
+        poundRate: rateNum,
+        location,
+        dependents,
+        tuitionFee: tuitionFeeNum,
+        paidTuitionFee: paidTuitionFeeNum,
+        totalAccommodationPounds,
+        totalAccommodationBDT,
+        remainingTuitionFee,
+        totalBankStatementPounds,
+        totalBankStatementBDT,
+        LONDON_SINGLE,
+        OUTSIDE_LONDON_SINGLE,
+        LONDON_DEPENDENT,
+        OUTSIDE_LONDON_DEPENDENT,
+      });
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      alert("Error generating invoice. Please try again.");
+    }
   };
 
   return (
@@ -283,6 +314,16 @@ export default function Costing() {
                         </span>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Get Invoice Button */}
+                  <div className="pt-4 border-t">
+                    <Button
+                      onClick={handleGenerateInvoice}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      Get Invoice (PDF)
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
