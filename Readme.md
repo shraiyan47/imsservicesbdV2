@@ -24,6 +24,8 @@ Create a `.env.local` file in the root directory with the following variables:
 ```
 NEXT_PUBLIC_API_URL=<your_api_url>
 NEXT_PUBLIC_APP_ENV=<development|production>
+MONGODB_URI=<your mongodb+srv connection string>
+MONGODB_URI_FALLBACK=<optional mongodb:// direct host connection string>
 ```
 
 ## Running the Application

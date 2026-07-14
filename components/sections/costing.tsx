@@ -15,7 +15,7 @@ export default function Costing() {
   // State for filters
   const [location, setLocation] = useState<"london" | "outside">("london");
   const [dependents, setDependents] = useState(0);
-  const [tuitionFee, setTuitionFee] = useState("");
+  const [tuitionFee, setTuitionFee] = useState(12000); // Default tuition fee
   const [paidTuitionFee, setPaidTuitionFee] = useState("");
 
   // Cost constants (per month)

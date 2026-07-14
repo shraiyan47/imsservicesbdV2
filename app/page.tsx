@@ -21,6 +21,8 @@ export const metadata: Metadata = {
     "university application",
     "IELTS coaching",
     "student visa guidance",
+    "Study in UK from Bangladesh",
+    "UK Student agency in Bangladesh",
   ], 
   authors: [{ name: "Shahadat Hossain - Afiyat Life Tech", url: "https://afiyatlife.com" }],
   openGraph: {
@@ -66,6 +68,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="min-h-screen bg-background">
+        <h1 className="sr-only">Study in UK from Bangladesh | UK Student agency in Bangladesh</h1>
         <TopBar />
         <Navbar />
         <Banner />

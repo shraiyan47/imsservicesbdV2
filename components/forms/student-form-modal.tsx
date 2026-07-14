@@ -7,17 +7,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { X } from "lucide-react";
-import StudentEnrollmentForm from "./student-enrollment-form";
+// import { X } from "lucide-react";
+// import StudentEnrollmentForm from "./student-enrollment-form";
 
 interface StudentFormModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-    onClose: () => void;
+  onClose: () => void;
   // countries: string[]; --- IGNORE ---
-  subjects: string[];
+  subjects?: string[];
 }
 
 
@@ -35,11 +35,21 @@ interface CountryName {
 export default function StudentFormModal({
   open,
   onOpenChange,
-    onClose,
+  onClose,
   // countries = [], --- IGNORE ---
-  subjects = [],
+  subjects,
 }: StudentFormModalProps) {
-    const [formData, setFormData] = useState({
+  const defaultSubjects = [
+    "Law",
+    "Business",
+    "Engineering",
+    "Medicine",
+    "Arts",
+    "Science",
+  ];
+  const subjectOptions = [...new Set((subjects && subjects.length > 0 ? subjects : defaultSubjects).concat(["Other"]))];
+
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -47,14 +57,17 @@ export default function StudentFormModal({
     country: 'Bangladesh',
     destinationCountries: ['United Kingdom'] as string[],
     subjects: [] as string[],
+    otherSubjectSelected: false,
+    otherSubject: '',
     qualifications: '',
+    cgpa: '',
     ielts: '',
     duolingo: '',
     budget: '',
     additionalInfo: '',
   });
 
-    const [countryOptions, setCountryOptions] = useState<CountryName[]>([
+  const [countryOptions, setCountryOptions] = useState<CountryName[]>([
     { value: "Bangladesh", label: "Bangladesh" },
     { value: "United Kingdom", label: "United Kingdom" },
     { value: "United States", label: "United States" },
@@ -96,6 +109,43 @@ export default function StudentFormModal({
         ? prev[field].filter((item) => item !== value)
         : [...prev[field], value],
     }));
+  };
+
+  const toggleOtherSubject = () => {
+    setFormData((prev) => {
+      const isCurrentlySelected = prev.otherSubjectSelected;
+      const otherValue = prev.otherSubject.trim();
+      const subjects = isCurrentlySelected
+        ? prev.subjects.filter((item) => item !== otherValue)
+        : otherValue
+        ? [...new Set([...prev.subjects, otherValue])]
+        : prev.subjects;
+
+      return {
+        ...prev,
+        otherSubjectSelected: !prev.otherSubjectSelected,
+        subjects,
+      };
+    });
+  };
+
+  const handleOtherSubjectChange = (value: string) => {
+    setFormData((prev) => {
+      const previousValue = prev.otherSubject.trim();
+      const sanitizedValue = value.trim();
+      const subjectsWithoutPrevious = prev.subjects.filter(
+        (item) => item !== previousValue
+      );
+      const subjects = sanitizedValue
+        ? [...subjectsWithoutPrevious, sanitizedValue]
+        : subjectsWithoutPrevious;
+
+      return {
+        ...prev,
+        otherSubject: value,
+        subjects,
+      };
+    });
   };
 
   return (
@@ -145,6 +195,11 @@ export default function StudentFormModal({
               }
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
+            
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+
             <input
               type="email"
               placeholder="Email *"
@@ -153,6 +208,8 @@ export default function StudentFormModal({
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
+
+
             <input
               type="tel"
               placeholder="Phone Number *"
@@ -211,17 +268,78 @@ export default function StudentFormModal({
               Subjects of Interest
             </label>
             <div className="space-y-2 max-h-32 overflow-y-auto border border-gray-300 rounded-lg p-3">
-              {subjects.map((subject) => (
-                <label key={subject} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.subjects.includes(subject)}
-                    onChange={() => toggleMultiSelect('subjects', subject)}
-                    className="w-4 h-4"
-                  />
-                  <span className="text-sm">{subject}</span>
-                </label>
-              ))}
+              {subjectOptions.map((subject) => {
+                if (subject === 'Other') {
+                  return (
+                    <label key={subject} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.otherSubjectSelected}
+                        onChange={toggleOtherSubject}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm">Other</span>
+                    </label>
+                  );
+                }
+
+                return (
+                  <label key={subject} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.subjects.includes(subject)}
+                      onChange={() => toggleMultiSelect('subjects', subject)}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm">{subject}</span>
+                  </label>
+                );
+              })}
+            </div>
+
+            {formData.otherSubjectSelected && (
+              <input
+                type="text"
+                placeholder="Please specify other subject"
+                value={formData.otherSubject}
+                onChange={(e) => handleOtherSubjectChange(e.target.value)}
+                className="mt-3 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              />
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Last Academic Qualification
+              </label>
+              <select
+                value={formData.qualifications}
+                onChange={(e) =>
+                  setFormData({ ...formData, qualifications: e.target.value })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              >
+                <option value="">Select qualification</option>
+                <option value="SSC">SSC</option>
+                <option value="HSC">HSC</option>
+                <option value="Bachelor">Bachelor</option>
+                <option value="Masters">Masters</option>
+                <option value="Diploma">Diploma</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                CGPA
+              </label>
+              <input
+                type="text"
+                placeholder="CGPA"
+                value={formData.cgpa}
+                onChange={(e) => setFormData({ ...formData, cgpa: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              />
             </div>
           </div>
 

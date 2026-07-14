@@ -1,16 +1,17 @@
 export interface CompanyInfo {
   _id?: string;
-  companyName: string;
   phone: string;
-  whatsapp: string;
+  whatsappUrl: string;
+  facebookUrl: string;
   email: string;
-  address: string;
   city: string;
   country: string;
   postalCode: string;
+  address: string;
+  googleMapLocation: string;
+  updatedAt?: Date;
+  companyName?: string;
   website?: string;
-  facebook?: string;
   whatsappGroup?: string;
   logo?: string;
-  updatedAt?: Date;
 }

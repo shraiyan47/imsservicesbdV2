@@ -7,20 +7,28 @@ import { fetchWithAuth } from '@/lib/api-client'
 
 interface CompanyInfo {
   phone: string
-  email: string
-  address: string
-  facebookUrl: string
   whatsappUrl: string
+  facebookUrl: string
+  email: string
+  city: string
+  country: string
+  postalCode: string
+  address: string
+  googleMapLocation: string
 }
 
 export default function ManageCompanyInfo() {
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState<CompanyInfo>({
     phone: '',
-    email: '',
-    address: '',
-    facebookUrl: '',
     whatsappUrl: '',
+    facebookUrl: '',
+    email: '',
+    city: '',
+    country: '',
+    postalCode: '',
+    address: '',
+    googleMapLocation: '',
   })
 
   useEffect(() => {
@@ -32,7 +40,10 @@ export default function ManageCompanyInfo() {
       const res = await fetchWithAuth('/api/admin/company-info')
       const data = await res.json()
       if (data) {
-        setFormData(data)
+        setFormData((prev) => ({
+          ...prev,
+          ...data,
+        }))
       }
     } catch (error) {
       console.error('Error fetching company info:', error)
@@ -82,24 +93,12 @@ export default function ManageCompanyInfo() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Email Address</label>
+              <label className="block text-sm font-medium mb-1">WhatsApp URL</label>
               <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                type="url"
+                value={formData.whatsappUrl}
+                onChange={(e) => setFormData({ ...formData, whatsappUrl: e.target.value })}
                 className="w-full px-4 py-2 border rounded-lg"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Address</label>
-              <textarea
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg"
-                rows={3}
-                required
               />
             </div>
 
@@ -114,12 +113,65 @@ export default function ManageCompanyInfo() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">WhatsApp URL</label>
+              <label className="block text-sm font-medium mb-1">Email Address</label>
               <input
-                type="url"
-                value={formData.whatsappUrl}
-                onChange={(e) => setFormData({ ...formData, whatsappUrl: e.target.value })}
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full px-4 py-2 border rounded-lg"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">City</label>
+              <input
+                type="text"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Country</label>
+              <input
+                type="text"
+                value={formData.country}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Postal Code</label>
+              <input
+                type="text"
+                value={formData.postalCode}
+                onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Office Address</label>
+              <textarea
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+                rows={3}
+                required
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Google Map Location</label>
+              <input
+                type="text"
+                value={formData.googleMapLocation}
+                onChange={(e) => setFormData({ ...formData, googleMapLocation: e.target.value })}
+                className="w-full px-4 py-2 border rounded-lg"
+                placeholder="Enter Google Maps URL or embed identifier"
               />
             </div>
 

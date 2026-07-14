@@ -143,7 +143,7 @@ export default function TopBar() {
         <StudentFormModal
           open={showStudentForm}
           onOpenChange={setShowStudentForm}
-          onClose={() => setShowStudentForm(false)} subjects={[]}           
+          onClose={() => setShowStudentForm(false)}
         />
       </div>
     </div>

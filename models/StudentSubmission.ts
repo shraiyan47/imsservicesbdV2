@@ -8,6 +8,7 @@ export interface StudentSubmission {
   destinationCountries: string[];
   subjects: string[];
   qualifications: string;
+  cgpa?: string;
   ielts?: number;
   duolingo?: number;
   budget?: number;
